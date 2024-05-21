@@ -16,11 +16,11 @@ void convert_gray(void) {
     while (src < end) {
         uint32_t pixel = *src++;
 		// Remain 8bit(by shift), bit clear-> 6bits each (by AND)
-        uint8_t r = (pixel >> 24) & 0x3F; 
-        uint8_t g = (pixel >> 16) & 0x3F; 
-        uint8_t b = (pixel >> 8) & 0x3F; 
+        uint8_t r = (pixel >> 24) & 0xFF; 
+        uint8_t g = (pixel >> 16) & 0xFF; 
+        uint8_t b = (pixel >> 8) & 0xFF; 
 
-        uint8_t gray = r + g + b;
+        uint8_t gray = (r + g + b)/3; // Sum the RGB components to get the grayscale value
 
         *dst++ = gray; // Store the 8-bit
     }

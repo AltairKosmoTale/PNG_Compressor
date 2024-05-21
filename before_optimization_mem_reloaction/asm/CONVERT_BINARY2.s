@@ -18,20 +18,25 @@ gray_convert_loop
 	CMP     R3, R2        
 	BEQ     end_gray_convert   
 
-	; 32bit R, G, B  
+	; 32bit R, G, B 
 	LDR     R0, [R2], #4  
 	MOV     R4, R0, LSR #24
 	MOV     R5, R0, LSR #16 
 	MOV     R6, R0, LSR #8   
 	
-	AND R4, R4, #63	;0b111111	
-	AND R5, R5, #63	;0b111111
-	AND R6, R6, #63 ;0b111111
+	AND R4, R4, #255	;0b11111111	
+	AND R5, R5, #255	;0b11111111
+	AND R6, R6, #255 	;0b11111111
 	
 	ADD         R7, R4, R5       ; R + G
 	ADD         R7, R7, R6       ; R + G + B
-
-	STRB    R7, [R1], #1   
+	
+    MOV     R8, R7
+    ADD     R8, R8, #1            ; R8 = R7 + 1 (rounding up)
+    LSR     R8, R8, #2            ; R8 = R8 / 4
+    ADD     R8, R8, R7, LSR #2    ; R8 = R8 + (R7 / 4)
+    LSR     R8, R8, #1            ; R8 = R8 / 2 (approximates R7 / 3)
+	STRB    R8, [R1], #1  
 
 	B      gray_convert_loop   
 
